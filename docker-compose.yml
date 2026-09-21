@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:16
+    container_name: studymanagementsystem-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: studydb
+      POSTGRES_USER: studyms_user
+      POSTGRES_PASSWORD: studyms_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - studyms_pgdata:/var/lib/postgresql/data
+
+volumes:
+  studyms_pgdata:
