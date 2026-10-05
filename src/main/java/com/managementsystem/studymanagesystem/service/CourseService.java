@@ -7,6 +7,7 @@ import com.managementsystem.studymanagesystem.entity.Teacher;
 import com.managementsystem.studymanagesystem.exception.EntityNotFoundException;
 import com.managementsystem.studymanagesystem.mapper.CourseMapper;
 import com.managementsystem.studymanagesystem.repository.CourseRepository;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CourseService {
 
     private final CourseRepository courseRepository;
@@ -28,6 +30,7 @@ public class CourseService {
         return courseMapper.toDto(findCourseOrThrow(id));
     }
 
+    @Transactional
     public CourseDto create(CourseCreateDto dto) {
         Teacher teacher = teacherService.findTeacherOrThrow(dto.teacherId());
         Course course = new Course();
@@ -37,6 +40,7 @@ public class CourseService {
         return courseMapper.toDto(courseRepository.save(course));
     }
 
+    @Transactional
     public CourseDto update(Long id, CourseCreateDto dto) {
         Course course = findCourseOrThrow(id);
         Teacher teacher = teacherService.findTeacherOrThrow(dto.teacherId());
@@ -46,6 +50,7 @@ public class CourseService {
         return courseMapper.toDto(courseRepository.save(course));
     }
 
+    @Transactional
     public void delete(Long id) {
         courseRepository.delete(findCourseOrThrow(id));
     }

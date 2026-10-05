@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class StudentService {
 
     private final StudentRepository studentRepository;
@@ -26,11 +28,13 @@ public class StudentService {
         return studentMapper.toDto(findStudentOrThrow(id));
     }
 
+    @Transactional
     public StudentDto create(StudentCreateDto dto) {
         Student student = studentMapper.toEntity(dto);
         return studentMapper.toDto(studentRepository.save(student));
     }
 
+    @Transactional
     public StudentDto update(Long id, StudentCreateDto dto) {
         Student student = findStudentOrThrow(id);
         student.setFirstName(dto.firstName());
@@ -38,6 +42,7 @@ public class StudentService {
         return studentMapper.toDto(studentRepository.save(student));
     }
 
+    @Transactional
     public void delete(Long id) {
         studentRepository.delete(findStudentOrThrow(id));
     }

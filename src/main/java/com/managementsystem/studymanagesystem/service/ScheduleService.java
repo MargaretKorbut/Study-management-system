@@ -13,11 +13,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
@@ -30,6 +32,7 @@ public class ScheduleService {
         return scheduleMapper.toDto(findScheduleOrThrow(id));
     }
 
+    @Transactional
     public ScheduleDto create(ScheduleCreateDto dto) {
         Group group = groupService.findGroupOrThrow(dto.groupId());
         Teacher teacher = teacherService.findTeacherOrThrow(dto.teacherId());
@@ -45,6 +48,7 @@ public class ScheduleService {
         return scheduleMapper.toDto(scheduleRepository.save(schedule));
     }
 
+    @Transactional
     public ScheduleDto update(Long id, ScheduleCreateDto dto) {
         Schedule schedule = findScheduleOrThrow(id);
         schedule.setStartDate(dto.startDate());
@@ -55,6 +59,7 @@ public class ScheduleService {
         return scheduleMapper.toDto(scheduleRepository.save(schedule));
     }
 
+    @Transactional
     public void delete(Long id) {
         scheduleRepository.delete(findScheduleOrThrow(id));
     }
@@ -67,6 +72,7 @@ public class ScheduleService {
         return scheduleRepository.findByTeacherId(teacherId, pageable).map(scheduleMapper::toDto);
     }
 
+    @Transactional
     public void deleteOlderThan(LocalDateTime threshold) {
         scheduleRepository.deleteByEndDateBefore(threshold);
     }

@@ -11,9 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class GroupService {
 
     private final GroupRepository groupRepository;
@@ -28,17 +30,20 @@ public class GroupService {
         return groupMapper.toDto(findGroupOrThrow(id));
     }
 
+    @Transactional
     public GroupDto create(GroupCreateDto dto) {
         Group group = groupMapper.toEntity(dto);
         return groupMapper.toDto(groupRepository.save(group));
     }
 
+    @Transactional
     public GroupDto update(Long id, GroupCreateDto dto) {
         Group group = findGroupOrThrow(id);
         group.setGroupName(dto.groupName());
         return groupMapper.toDto(groupRepository.save(group));
     }
 
+    @Transactional
     public void delete(Long id) {
         groupRepository.delete(findGroupOrThrow(id));
     }
