@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record CourseCreateDto (
         @NotBlank(message = "Название курса обязательно") String courseName,
-        String courseDescription,
+        @NotBlank(message = "Описание курса обязательно") String courseDescription,
         @NotNull(message = "ID преподавателя обязателен") Long teacherId
 ){
 }
